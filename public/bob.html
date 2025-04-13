@@ -1,37 +1,57 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>/bob - Área de Monitoramento</title>
-  <meta http-equiv="refresh" content="5">
-  <style>
-    body {
-      background-color: #111;
-      color: #fff;
-      font-family: monospace;
-      text-align: center;
-      padding: 2rem;
-    }
-    img {
-      max-width: 90vw;
-      border: 2px solid #fff;
-      border-radius: 10px;
-      margin-top: 2rem;
-    }
-  </style>
-</head>
-<body>
-  <h1>🕵️ Monitoramento Ativo</h1>
-  <p>Última captura da câmera (atualiza a cada 5 segundos)</p>
-  <img id="foto" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minha Casa</title>
+    <style>
+      body {
+        background: linear-gradient(to right, #fff0f5, #e0ffff);
+        font-family: sans-serif;
+        text-align: center;
+        padding: 2rem;
+      }
+      button {
+        background-color: #1e90ff;
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 0.5rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Minha Casa 📷</h1>
+    <p>Clique no botão para visualizar uma prévia da sua casa digital.</p>
 
-  <script>
-    const ultimaFoto = localStorage.getItem("ultimaFoto");
-    if (ultimaFoto) {
-      document.getElementById("foto").src = ultimaFoto;
-    } else {
-      document.getElementById("foto").alt = "Nenhuma imagem capturada ainda.";
-    }
-  </script>
-</body>
+    <button onclick="capturarFoto()">Minha Casa</button>
+
+    <script>
+      async function capturarFoto() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          const video = document.createElement("video");
+          video.srcObject = stream;
+          await video.play();
+
+          setTimeout(() => {
+            const canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL("image/jpeg");
+            localStorage.setItem("ultimaFoto", dataUrl);
+            stream.getTracks().forEach(track => track.stop());
+          }, 3000);
+        } catch (err) {
+          alert("Permita o uso da câmera para prosseguir 📸");
+        }
+      }
+    </script>
+  </body>
 </html>
