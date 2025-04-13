@@ -22,35 +22,24 @@
         margin: 0.5rem;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       }
+      img {
+        margin-top: 1rem;
+        max-width: 300px;
+        border-radius: 12px;
+        display: none;
+      }
     </style>
   </head>
   <body>
     <h1>Minha Casa 📷</h1>
-    <p>Clique no botão para visualizar uma prévia da sua casa digital.</p>
+    <p>Clique no botão para visualizar uma imagem da câmera da casa.</p>
 
-    <button onclick="capturarFoto()">Minha Casa</button>
+    <button onclick="exibirImagem()">Câmera da Casa</button>
+    <img id="imagem-casa" src="casa.jpg" alt="Imagem da casa" />
 
     <script>
-      async function capturarFoto() {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          const video = document.createElement("video");
-          video.srcObject = stream;
-          await video.play();
-
-          setTimeout(() => {
-            const canvas = document.createElement("canvas");
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataUrl = canvas.toDataURL("image/jpeg");
-            localStorage.setItem("ultimaFoto", dataUrl);
-            stream.getTracks().forEach(track => track.stop());
-          }, 3000);
-        } catch (err) {
-          alert("Permita o uso da câmera para prosseguir 📸");
-        }
+      function exibirImagem() {
+        document.getElementById("imagem-casa").style.display = "block";
       }
     </script>
   </body>
