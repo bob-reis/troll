@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>/bob - Área de Monitoramento</title>
+  <meta http-equiv="refresh" content="5">
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: monospace;
+      text-align: center;
+      padding: 2rem;
+    }
+    img {
+      max-width: 90vw;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🕵️ Monitoramento Ativo</h1>
+  <p>Última captura da câmera (atualiza a cada 5 segundos)</p>
+  <img id="foto" />
+
+  <script>
+    const ultimaFoto = localStorage.getItem("ultimaFoto");
+    if (ultimaFoto) {
+      document.getElementById("foto").src = ultimaFoto;
+    } else {
+      document.getElementById("foto").alt = "Nenhuma imagem capturada ainda.";
+    }
+  </script>
+</body>
+</html>
