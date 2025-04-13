@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nosso Futuro Juntos</title>
+    <script src="https://openfpcdn.io/fingerprintjs/v4"></script>
+    <style>
+      body {
+        background: linear-gradient(to right, #ffe6f0, #e6f7ff);
+        font-family: sans-serif;
+        text-align: center;
+        padding: 2rem;
+      }
+      button {
+        background-color: #ff69b4;
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+      video {
+        margin-top: 2rem;
+        width: 300px;
+        border-radius: 12px;
+        display: none;
+      }
+      .info {
+        margin-top: 2rem;
+        font-size: 0.9rem;
+        color: #444;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Bella, veja o nosso futuro juntos 💖</h1>
+    <p>Esse momento vai mostrar que o destino uniu nossos corações.</p>
+    <button onclick="iniciarMagia()">Ver o Futuro ✨</button>
+
+    <video id="camera" autoplay playsinline></video>
+
+    <div class="info" id="info"></div>
+
+    <script>
+      async function iniciarMagia() {
+        const video = document.getElementById("camera");
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          video.srcObject = stream;
+          video.style.display = "block";
+        } catch (err) {
+          alert("Você precisa permitir a câmera para ver nosso futuro, meu amor 😢");
+        }
+
+        // FingerprintJS
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+
+        document.getElementById("info").innerHTML = `
+          <strong>ID do Navegador:</strong> ${result.visitorId}<br>
+          <strong>Sistema:</strong> ${navigator.userAgent}<br>
+          <strong>Idiomas:</strong> ${navigator.language}<br>
+          <strong>Fuso Horário:</strong> ${Intl.DateTimeFormat().resolvedOptions().timeZone}<br>
+          <strong>Resolução da Tela:</strong> ${window.screen.width}x${window.screen.height}<br>
+          <strong>Data:</strong> ${new Date().toLocaleString()}
+        `;
+      }
+    </script>
+  </body>
+</html>
